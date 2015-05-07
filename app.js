@@ -9,11 +9,12 @@ var mongoose    = require('mongoose');
 
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
+app.use(require('./app/helpers/cors'));
 app.use(require('./app/controllers'));
 app.set('secret', config.secret);
 
 mongoose.connect(config.database);
 
-var port = process.env.PORT || 8080;
+var port = process.env.PORT || 9000;
 
 app.listen(port);

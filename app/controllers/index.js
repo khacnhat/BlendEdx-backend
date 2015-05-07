@@ -9,19 +9,23 @@ var jwt         = require('jsonwebtoken');
 var unless      = require('express-unless');
 
 var authenticate = function(req, res, next){
-  var token = req.headers['x-access-token'];
+  if(req.method != 'OPTIONS') {
+    var token = req.headers['x-access-token'];
 
-  if(token){
-    jwt.verify(token, req.app.get('secret'), function(err, decoded){
-      if(err){
-        return res.status(401).json({message: 'Failed to authenticate token'});
-      }else{
-        req.user = decoded;
-        next();
-      }
-    });
+    if (token) {
+      jwt.verify(token, req.app.get('secret'), function (err, decoded) {
+        if (err) {
+          return res.status(401).json({message: 'Failed to authenticate token'});
+        } else {
+          req.user = decoded;
+          next();
+        }
+      });
+    } else {
+      return res.status(403).json({message: 'No token provided'});
+    }
   }else{
-    return res.status(403).json({message: 'No token provided'});
+    next();
   }
 };
 authenticate.unless = unless;
@@ -31,5 +35,6 @@ router.use(authenticate.unless({path: ['/users/register', '/users/login']}));
 router.use('/subjects', require('./subjects'));
 router.use('/groups', require('./groups'));
 router.use('/users', require('./users'));
+router.use('/announcements', require('./announcements'));
 
 module.exports = router;

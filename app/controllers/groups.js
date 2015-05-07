@@ -4,6 +4,7 @@
 var express     = require('express');
 var router      = express.Router();
 var Group       = require('../models/group');
+var Announcement       = require('../models/announcement');
 var HttpStatus = require('http-status-codes');
 
 // create group
@@ -24,7 +25,7 @@ router.post('/', function(req, res){
           if(err){
             res.send(err);
           }else{
-            res.json({message: 'Group created'});
+            res.json(group);
           }
         });
       }else{
@@ -40,7 +41,6 @@ router.post('/', function(req, res){
 router.get('/', function(req, res){
   Group.getByUserId(req.user._id, function(err, groups){
     if(!err){
-      console.log('Groups: ' + groups.length);
       res.json(groups);
     }else{
       res.send(err);
@@ -59,4 +59,16 @@ router.get('/:id', function(req, res){
   });
 });
 
+// get a announcement list
+router.get('/:id/announcements', function(req, res){
+  var offset = req.query.offset? req.query.offset : 0;
+  var limit = req.query.limit? req.query.limit : 10;
+  Announcement.findByGroup(req.params.id, offset, limit, function(err, announcements){
+    if(err){
+      res.send(err);
+    }else{
+      res.json(announcements);
+    }
+  });
+});
 module.exports = router;
