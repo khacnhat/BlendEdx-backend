@@ -12,11 +12,18 @@ var CommentSchema = new Schema({
   updated: Date
 });
 
+var FileSchema   = new Schema({
+  name: String,
+  path: String,
+  extension: String,
+  size: Number
+});
+
 var AnnouncementSchema = new Schema({
   text: String,
   author: {_id: Schema.Types.ObjectId, name: String, avatar: String},
   groups: [{_id: Schema.Types.ObjectId, name: String}],
-  attachments: [{_id: Schema.Types.ObjectId, title: String, link: String, type: String, thumbnail: String}],
+  attachments: [FileSchema],
   comments: [CommentSchema],
   created: Date,
   updated: Date

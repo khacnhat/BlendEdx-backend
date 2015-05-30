@@ -30,11 +30,12 @@ var authenticate = function(req, res, next){
 };
 authenticate.unless = unless;
 
-router.use(authenticate.unless({path: ['/users/register', '/users/login']}));
+router.use(authenticate.unless({path: ['/users/register', '/users/login', '/files']}));
 
 router.use('/subjects', require('./subjects'));
 router.use('/groups', require('./groups'));
 router.use('/users', require('./users'));
 router.use('/announcements', require('./announcements'));
+router.use('/files', require('./files'));
 
 module.exports = router;

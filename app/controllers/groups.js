@@ -37,9 +37,10 @@ router.post('/', function(req, res){
   }
 });
 
-// get all groups
+// get all groups  based on query
 router.get('/', function(req, res){
-  Group.getByUserId(req.user._id, function(err, groups){
+  var query = req.query.name;
+  Group.getByUserId(req.user._id, query, function(err, groups){
     if(!err){
       res.json(groups);
     }else{
@@ -67,8 +68,10 @@ router.get('/:id/announcements', function(req, res){
     if(err){
       res.send(err);
     }else{
+      console.log('Announcements: ', announcements);
       res.json(announcements);
     }
   });
 });
+
 module.exports = router;
