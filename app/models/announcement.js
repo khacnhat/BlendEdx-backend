@@ -40,4 +40,13 @@ AnnouncementSchema.statics.findByGroup = function(groupId, offset, limit, callba
 };
 
 
+AnnouncementSchema.statics.findByGroups = function(groupIds, offset, limit, callback){
+  return this
+    .find({'groups._id': {$in: groupIds}})
+    .sort({'created': -1})
+    .skip(offset)
+    .limit(limit)
+    .exec(callback);
+}
+
 module.exports = mongoose.model('Announcement', AnnouncementSchema);
